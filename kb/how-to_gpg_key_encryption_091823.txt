@@ -1,0 +1,319 @@
+How to gpg public key encryption/decryption
+---------------------------------------------
+
+list common commands
+$ gpg --help
+
+list keys in your gpg key list
+$ gpg --list-keys
+this will include both imported public keys from others...
+and public keys you have generated and created a passphrase for
+
+generate key
+$ gpg --gen-key
+then follow directions... 
+public key block will be created and added to your gpg key list...
+you will also create a passphrase which will be used to decrypt
+messages that are encrypted with this public key block generated
+
+export public key block to stdout
+$ gpg --armor --export <user email>
+
+delete keys
+$ gpg --delete-secret-keys <user email>
+$ gpg --delete-keys <user email>
+
+import public key (import user and email)
+$ gpg --import <key file>
+
+encrypt file with imported public key
+$ gpg --armor --encrypt <message file name>
+then follow directions...  encrypted message will be generated with <message file name> + <additional encryption extension>
+
+decrypt file that was encrypted with a public key in your key list that you generated and have the passphrase for
+$ gpg -d <encrypted file>
+then you will prompted for your passphrase...
+then the decrypted message will be printed to stdout
+
+------------
+EXAMPLES
+-------------
+house@house-linux:$ gpg -d test1.asc
+
+You need a passphrase to unlock the secret key for
+user: "Outer Non (SR) <outernon@gmx.com>"
+2048-bit RSA key, ID 12442080, created 2013-05-16 (main key ID FD14C7A9)
+
+gpg: encrypted with 2048-bit RSA key, ID 12442080, created 2013-05-16
+      "Outer Non (SR) <outernon@gmx.com>"
+
+
+hello world
+
+test decrypting file
+
+
+house@house-linux:$
+house@house-linux:$ gpg --help
+gpg (GnuPG) 1.4.11
+Copyright (C) 2010 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Home: ~/.gnupg
+Supported algorithms:
+Pubkey: RSA, RSA-E, RSA-S, ELG-E, DSA
+Cipher: 3DES, CAST5, BLOWFISH, AES, AES192, AES256, TWOFISH, CAMELLIA128, 
+        CAMELLIA192, CAMELLIA256
+Hash: MD5, SHA1, RIPEMD160, SHA256, SHA384, SHA512, SHA224
+Compression: Uncompressed, ZIP, ZLIB, BZIP2
+
+Syntax: gpg [options] [files]
+sign, check, encrypt or decrypt
+default operation depends on the input data
+
+Commands:
+ 
+ -s, --sign [file]             make a signature
+     --clearsign [file]        make a clear text signature
+ -b, --detach-sign             make a detached signature
+ -e, --encrypt                 encrypt data
+ -c, --symmetric               encryption only with symmetric cipher
+ -d, --decrypt                 decrypt data (default)
+     --verify                  verify a signature
+     --list-keys               list keys
+     --list-sigs               list keys and signatures
+     --check-sigs              list and check key signatures
+     --fingerprint             list keys and fingerprints
+ -K, --list-secret-keys        list secret keys
+     --gen-key                 generate a new key pair
+     --delete-keys             remove keys from the public keyring
+     --delete-secret-keys      remove keys from the secret keyring
+     --sign-key                sign a key
+     --lsign-key               sign a key locally
+     --edit-key                sign or edit a key
+     --gen-revoke              generate a revocation certificate
+     --export                  export keys
+     --send-keys               export keys to a key server
+     --recv-keys               import keys from a key server
+     --search-keys             search for keys on a key server
+     --refresh-keys            update all keys from a keyserver
+     --import                  import/merge keys
+     --card-status             print the card status
+     --card-edit               change data on a card
+     --change-pin              change a card's PIN
+     --update-trustdb          update the trust database
+     --print-md algo [files]   print message digests
+
+Options:
+ 
+ -a, --armor                   create ascii armored output
+ -r, --recipient NAME          encrypt for NAME
+ -u, --local-user              use this user-id to sign or decrypt
+ -z N                          set compress level N (0 disables)
+     --textmode                use canonical text mode
+ -o, --output                  use as output file
+ -v, --verbose                 verbose
+ -n, --dry-run                 do not make any changes
+ -i, --interactive             prompt before overwriting
+     --openpgp                 use strict OpenPGP behavior
+     --pgp2                    generate PGP 2.x compatible messages
+
+(See the man page for a complete listing of all commands and options)
+
+Examples:
+
+ -se -r Bob [file]          sign and encrypt for user Bob
+ --clearsign [file]         make a clear text signature
+ --detach-sign [file]       make a detached signature
+ --list-keys [names]        show keys
+ --fingerprint [names]      show fingerprints
+
+Please report bugs to <gnupg-bugs@gnu.org>.
+house@house-linux:$ 
+house@house-linux:$ 
+house@house-linux:$ 
+house@house-linux:$ gpg --gen-key
+gpg (GnuPG) 1.4.11; Copyright (C) 2010 Free Software Foundation, Inc.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA (default)
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 1024
+Requested keysize is 1024 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0) 0
+Key does not expire at all
+Is this correct? (y/N) y
+
+You need a user ID to identify your key; the software constructs the user ID
+from the Real Name, Comment and Email Address in this form:
+    "Heinrich Heine (Der Dichter) <heinrichh@duesseldorf.de>"
+
+Real name: bob bobberson
+Email address: bob@example.com
+Comment: this is my first test key
+You selected this USER-ID:
+    "bob bobberson (this is my first test key) <bob@example.com>"
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? o
+You need a Passphrase to protect your secret key.
+
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+
+Not enough random bytes available.  Please do some other work to give
+the OS a chance to collect more entropy! (Need 280 more bytes)
+lkajsdfkljsadflaskjdfalsdkjfwoiqruweq;lkjfvm.,vmasldkfjwoerql;fjalksdmf.vmlskdfjqweorualkjsdlkfjasv./mx.cjvasldkjfwoeruljdfsa;sldkjfalsdkfjas;dlkfjasd;lfjjfkdajsdl;kfjjfjdsfksdjalsdkjfowruealskdjvasdporuwsalkdjfwperijasldkjfwperjuasldkjfq;wperujalsdkjfworualskdjfoiwerjkvmdkeuwoidflkjsdlkjflkeuowreuilskjvclxkjlwskejfrweoijulskdjflwkejrlkmlxk+++++
+..+++++
+We need to generate a lot of random bytes. It is a good idea to perform
+some other action (type on the keyboard, move the mouse, utilize the
+disks) during the prime generation; this gives the random number
+generator a better chance to gain enough entropy.
+..+++++
+...+++++
+nvgpg: key AB4A5702 marked as ultimately trusted
+public and secret key created and signed.
+
+gpg: checking the trustdb
+gpg: 3 marginal(s) needed, 1 complete(s) needed, PGP trust model
+gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
+pub   1024R/AB4A5702 2013-02-01
+      Key fingerprint = 5F8D 217A 8714 6D6C 8127  9C61 72BC DA97 AB4A 5702
+uid                  bob bobberson (this is my first test key) <bob@example.com>
+sub   1024R/54ABAE9A 2013-02-01
+
+house@house-linux:$ gpg --list-keys
+/home/house/.gnupg/pubring.gpg
+-----------------------------
+pub   1024D/9BDC147D 2012-12-02
+uid                  houseg (houseg is the man) <houseg@houseg.com>
+sub   1024g/E58B39A2 2012-12-02
+
+pub   3072R/5F7EDEED 2012-08-31
+uid                  Direct2You <testtor@tormail.org>
+sub   3072R/C195E130 2012-08-31
+
+pub   1024R/4F1BBD6F 2013-02-01
+uid                  bob bobberson (this is my first key) <bob@example.com>
+sub   1024R/4EC03A7C 2013-02-01
+
+pub   1024R/AB4A5702 2013-02-01
+uid                  bob bobberson (this is my first test key) <bob@example.com>
+sub   1024R/54ABAE9A 2013-02-01
+
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$ gpg --armor --export bob@example.com
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+mI0EUQscBAEEALqNd0PcpbrkkK+qjbSdeO843LH/h3DKdVZgnMuSBdVUHoCVNkX0
+PT08OuM2xsHvD6uMxCvxcMeScezfmUZEqIqVoKHgubvcEA+fVOtYPr/wpojtGyuf
+whRRMclr/GnVXFsk+YV0Rr9h8KEyxJn0aWvt0FSsMXwuiqVlSxTTFzDNABEBAAG0
+NmJvYiBib2JiZXJzb24gKHRoaXMgaXMgbXkgZmlyc3Qga2V5KSA8Ym9iQGV4YW1w
+bGUuY29tPoi4BBMBAgAiBQJRCxwEAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIX
+gAAKCRAsh3LpTxu9b4upA/wLsoaV848dE4wDvObmumSwzvvK+nmWlxVQi0p3PvkO
+K1XnMKlTjhmy086UGD68hBkyL6HhqpJLIzV97S0GBs25RmTHIZaCti/BqJgOKb17
+Fo+nZyGv58vhRLtFwNTOcw2lXc2s75FlZ8bSBV0StpI96zrV7qUqlG9mMXv8Dcy1
+9riNBFELHAQBBAC4+OyMAkVnoYH7wxLWVHubT9AXOIXRxdT+rSES/vl5DWTlPjY2
+S2N1COb+3HmqLzjvDDeqnvA2JMeKaJLFJqYO2vAMX3QgQWV6g6axQI9YDmRbeYWU
+BKfgL/3eorN5Mj8h4NXtUci3uXdx3n0aGh/ei1jLrR/hKfygXGq7ueFClQARAQAB
+iJ8EGAECAAkFAlELHAQCGwwACgkQLIdy6U8bvW/dGgP/SAp88JmeGgY7ptfgw2jN
+82ocmBwE5hgZwe/WIP2b/hCaVbX6Bw2hYsnASMCIbHv4IZwasxdl3weNfBspwX2c
++hOXVdaMCnT/7L0h4f7GpOXD54fDnsaxe2uqG87BUrGNqP8ABrF6TYyQJTlCdl0F
+TOx8sDCoI3HiwaXNwHU/OFaYjQRRCx8CAQQA2OH3cPEhwLaB63DyA/+Hpv7kMldv
+K0xDzWq31s1ev4GPg10qBOG7Ssp2Up4CHAQ5kYOwqFRFUu3f0PyGYcCCAt16Re2t
+dqhmBL37ckoFh4ImQaNvwISXJFpJgnVMUWg6fANQqNhGw+TOuV4iHQYVCC30MpMN
+KdV6FwxulDLHESsAEQEAAbQ7Ym9iIGJvYmJlcnNvbiAodGhpcyBpcyBteSBmaXJz
+dCB0ZXN0IGtleSkgPGJvYkBleGFtcGxlLmNvbT6IuAQTAQIAIgUCUQsfAgIbAwYL
+CQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQcrzal6tKVwLC9QP/cNuo7cg2+yyD
+vX6z7X5rG+Ytc9G0jatwkMy5bgrvDEV/4L872Wso57Hi/szwwdI4MIMRo2NM0Tkl
+DPg2+rFQ68rUFWcEVW10rJ6Ai4oaMVtYMWCP2YMWexcYUbRFmfwEPeyhkK1aPvBZ
+Zzrftwv53IL9UQC3xUaOeXdTGb1LlLu4jQRRCx8CAQQAuBAVjXojTDEjwvh+HkVx
+lDILZ5ILO3FZvx3PtJ2SOV7sqN2+F4Vy56ULYREFPufsmxVzr0s6Na0l2Qi2yEIE
+cXCjr5Ey1KanOXMoUMZKMEQTdLYNAyo2LXGeFuqJGwKXxTLz8i+Ze1nAbRZlaUDq
+u1/9VowDviFgBeiBRJ8vLP0AEQEAAYifBBgBAgAJBQJRCx8CAhsMAAoJEHK82per
+SlcCn1kEANABifwaYaTO7V8LYQLuwSnB/SA7mjDLlyUnPUaFjZbLbjBFAN2oTugB
+hML+Y1nAq7Iecgju/JTir9mse/2yle7Kb4A6JtYIQRR874Cpx7pXGsPjem65ufsn
+L8026Da43aytaWeYw1Em4oe5TVBCP5RP8uu3mSh5vJKh11/4by+p
+=TJMM
+-----END PGP PUBLIC KEY BLOCK-----
+house@house-linux:$
+
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$ gpg --import pkey
+gpg: key 65AB1855: public key "testtor (LPTPGW) <testtor@tormail.org>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1  (RSA: 1)
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$ gpg --list-keys
+/home/house/.gnupg/pubring.gpg
+-----------------------------
+pub   2048R/65AB1855 2012-12-12
+uid                  testtor (LPTPGW) <testtor@tormail.org>
+sub   2048R/67AC4C1F 2012-12-12
+
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$ emacs testmsg.txt
+house@house-linux:$ more testmsg.txt
+this is a test message to encrypt
+house@house-linux:$
+house@house-linux:$
+house@house-linux:$ gpg --armor --encrypt testmsg.txt
+You did not specify a user ID. (you may use "-r")
+
+Current recipients:
+
+Enter the user ID.  End with an empty line: testtor@tormail.org
+gpg: 67AC4C1F: There is no assurance this key belongs to the named user
+
+pub  2048R/67AC4C1F 2012-12-12 testtor (LPTPGW) <testtor@tormail.org>
+ Primary key fingerprint: F341 1E76 B02D C485 46F4  1CD3 92B1 15C2 65AB 1855
+      Subkey fingerprint: 05F5 7630 7431 DA09 FF3C  4A79 A227 2292 67AC 4C1F
+
+It is NOT certain that the key belongs to the person named
+in the user ID.  If you *really* know what you are doing,
+you may answer the next question with yes.
+
+Use this key anyway? (y/N) y
+
+Current recipients:
+2048R/67AC4C1F 2012-12-12 "testtor (LPTPGW) <testtor@tormail.org>"
+
+Enter the user ID.  End with an empty line: 
+house@house-linux:$ more testmsg.txt.asc
+-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+hQEMA6InIpJnrEwfAQgAscoJ6sDmPxAuN+pfjoOr5To2Wl66HQkxpiJhJh/IPWDL
+HAR5+jrvf2ucSb+KqNZUNZKSnc/Gg/xH12NWHxgIBwsJ6uQJOO5FxVqPASdX/brQ
+H/EW0DfCfDzysQTyAWPoyssif+HmX+fpjkp+XD/1OrqlE/o7+WU335pyOYqmxX4X
+5kS6ucz8ynLUsl/OQ40HZAWKCHM4K1iepP23LG4h9M7ZlVUZg65rTj3kvmFkLGmg
+amKiimD/TcUn4F06rKroLEQKwYst7e/QgXRuNNqUifRdh/5f7DJKq3Q+pNPNfngi
+83EEWw1yM41iGg+FpzuNRF/pzDIElXiGM0y7+EcuF9JkAR+8cyYwo+QnkSxnySVQ
+kAG4CUf7Y/xSVuPHUiVqZsooPyQroKV7sybW21mO7jN/PAkMOGpJXqVFm3Rnn3MG
+V5vemN+pNMiHwHej+ZnhHdh9wXGE3VUZwUdAvnEMHDV94nsJ3Q==
+=75T7
+-----END PGP MESSAGE-----
+house@house-linux:$
+house@house-linux:$
