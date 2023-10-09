@@ -1,3 +1,6 @@
+# below is the full chat for this session
+# run this file from the CLI to filter for just 'maria'
+#   $ python3 <this_file_name.py>
 str_alt = '''
 **** BEGIN LOGGING AT Sun Oct  8 01:09:44 2023
 

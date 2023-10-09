@@ -1,3 +1,6 @@
+# below is the full chat for this session
+# run this file from the CLI to filter for just 'maria'
+#   $ python3 <this_file_name.py>
 strAOA_alt = '''
             [2:58pm] JJ76: Mathematicians speaking How long will it take for pDAI to peg to a $1? Assuming that's the goal. Correct me if I'm wrong .
             [2:59pm] Simple: Maria do you see an inbound recovery coming for the WritingContract since it’s 90% dip? Since the violent dip in certain coins could be viewed as mainly over, will we see recoveries? or will there be new tokens taking over the tiles of the older ones?

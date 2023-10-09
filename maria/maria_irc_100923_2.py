@@ -1,3 +1,6 @@
+# below is the full chat for this session
+# run this file from the CLI to filter for just 'maria'
+#   $ python3 <this_file_name.py>
 str_alt = '''
 [3:31pm] PassportPowell: Not interested in chasing green candles that have ran up that much that quickly. plus you've given us an idea of what may be good token to look into (nfa)
 [3:31pm] sayyid: hahaha

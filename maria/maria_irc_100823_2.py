@@ -1,3 +1,6 @@
+# below is the full chat for this session
+# run this file from the CLI to filter for just 'maria'
+#   $ python3 <this_file_name.py>
 str_alt = '''
         [9:59pm] You are now known as Guest2661.
         [10:01pm] futureWhale_ joined the chat room.
