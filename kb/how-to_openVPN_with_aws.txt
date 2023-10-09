@@ -1,0 +1,247 @@
+#===============================================================================#
+how-to openVPN w/ aws 
+	by house (02.23.21)
+
+Install...
+#ref: https://www.tecmint.com/install-openvpn-in-ubuntu/
+#ref: https://github.com/angristan/openvpn-install
+#ref: https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+
+Usage...
+#ref: https://community.openvpn.net/openvpn/wiki/Openvpn23ManPage
+#ref: https://forums.openvpn.net/viewtopic.php?t=20742
+#ref: https://openvpn.net/community-resources/reference-manual-for-openvpn-2-4/
+#ref: https://whatsmyip.com
+#ref: https://www.dnsleaktest.com
+#ref: https://www.ipqualityscore.com/free-ip-lookup-proxy-vpn-test/
+
+Index...
+# openvpn start / stop 
+# logs (syslog)
+# config file location
+# install openVPN on aws ec2
+# example run openvpn-install.sh (add client; after install)
+# example run openvpn-install.sh (first time install)
+#===============================================================================#
+
+#===============================#
+# openvpn start / stop 
+#===============================#
+$ service openvpn start
+$ service openvpn stop
+$ service openvpn restart
+$ service openvpn status
+
+#===============================#
+# logs (syslog; status)
+#===============================#
+# default logging is to syslog apparently (/var/log/syslog)
+$ grep vpn /var/log/syslog
+
+# default log (grep <user_name>)
+$ grep test_ /var/log/syslog
+$ grep test_ /var/log/syslog.1
+$ grep test_ /var/log/syslog.2
+$ grep test_ /var/log/syslog.3
+$ grep test_ /var/log/syslog*
+
+# show current status
+$ more /var/log/openvpn/status.log
+
+#===============================#
+# config file location
+#===============================#
+/etc/openvpn/server.conf
+
+#===============================#
+# install openVPN on aws ec2
+#===============================#
+
+1) create aws ec2 (or oracle cloud) instance w/ ubuntu 20.04 
+#ref: https://aws.amazon.com
+#ref: https://cloud.oracle.com
+
+
+2) download openVPN server
+#ref: https://github.com/angristan/openvpn-install
+
+# download shell script installer
+$ curl -O https://raw.githubusercontent.com/angristan/openvpn-install/master/openvpn-install.sh
+
+# update permission to run
+$ chmod +x openvpn-install.sh
+
+
+3) install openVPN server & add first client
+## run initial setup with automated questions
+# note: AWS and Oracle servers are by-default using a NAT (network address translator)
+#	- hence, you will need both public & private IPv4 addresses for setup.
+#	- 'openvpn-install.sh' should detect these addresses automatically,
+#	- but they can be verified in the aws web console
+$ ./openvpn-install.sh 
+
+
+4) add openVPN client & uninstall
+$ ./openvpn-install.sh 
+
+## notes (https://github.com/angristan/openvpn-install)
+When OpenVPN is installed, you can run the script again, and you will get the choice to:
+	- Add a client
+	- Remove a client
+	- Uninstall OpenVPN
+In your home directory, you will have .ovpn files. These are the client configuration files. Download them from your server and connect using your favorite OpenVPN client.
+
+
+5) start / stop openVPN
+$ service openvpn start
+$ service openvpn stop
+$ service openvpn restart
+$ service openvpn status
+
+#==============================================================================#
+# example run openvpn-install.sh (add client; after install)
+#==============================================================================#
+root@ip-172-31-1-213:/home/ubuntu# ./openvpn-install.sh 
+Welcome to OpenVPN-install!
+The git repository is available at: https://github.com/angristan/openvpn-install
+
+It looks like OpenVPN is already installed.
+
+What do you want to do?
+   1) Add a new user
+   2) Revoke existing user
+   3) Remove OpenVPN
+   4) Exit
+Select an option [1-4]: 1
+
+Tell me a name for the client.
+The name must consist of alphanumeric character. It may also include an underscore or a dash.
+Client name: test_house
+
+Do you want to protect the configuration file with a password?
+(e.g. encrypt the private key with a password)
+   1) Add a passwordless client
+   2) Use a password for the client
+Select an option [1-2]: 1
+
+Note: using Easy-RSA configuration from: /etc/openvpn/easy-rsa/vars
+Using SSL: openssl OpenSSL 1.1.1f  31 Mar 2020
+Generating an EC private key
+writing new private key to '/etc/openvpn/easy-rsa/pki/easy-rsa-19644.0Ez0TD/tmp.cULilA'
+-----
+Using configuration from /etc/openvpn/easy-rsa/pki/easy-rsa-19644.0Ez0TD/tmp.CvMsyQ
+Check that the request matches the signature
+Signature ok
+The Subject's Distinguished Name is as follows
+commonName            :ASN.1 12:'test_house'
+Certificate is to be certified until May 29 23:26:03 2023 GMT (825 days)
+
+Write out database with 1 new entries
+Data Base Updated
+
+Client test_house added.
+
+The configuration file has been written to /home/ubuntu/test_house.ovpn.
+Download the .ovpn file and import it in your OpenVPN client.
+
+
+
+#==============================================================================#
+# example run openvpn-install.sh (first time install)
+#==============================================================================#
+root@ip-172-31-1-213:/home/ubuntu# ./openvpn-install.sh 
+Welcome to the OpenVPN installer!
+The git repository is available at: https://github.com/angristan/openvpn-install
+
+I need to ask you a few questions before starting the setup.
+You can leave the default options and just press enter if you are ok with them.
+
+I need to know the IPv4 address of the network interface you want OpenVPN listening to.
+Unless your server is behind NAT, it should be your public IPv4 address.
+IP address: 172.31.1.213
+
+It seems this server is behind NAT. What is its public IPv4 address or hostname?
+We need it for the clients to connect to the server.
+Public IPv4 address or hostname: 18.219.138.207
+
+Checking for IPv6 connectivity...
+
+Your host does not appear to have IPv6 connectivity.
+
+Do you want to enable IPv6 support (NAT)? [y/n]: n
+
+What port do you want OpenVPN to listen to?
+   1) Default: 1194
+   2) Custom
+   3) Random [49152-65535]
+Port choice [1-3]: 1
+
+What protocol do you want OpenVPN to use?
+UDP is faster. Unless it is not available, you shouldn't use TCP.
+   1) UDP
+   2) TCP
+Protocol [1-2]: 1
+
+What DNS resolvers do you want to use with the VPN?
+   1) Current system resolvers (from /etc/resolv.conf)
+   2) Self-hosted DNS Resolver (Unbound)
+   3) Cloudflare (Anycast: worldwide)
+   4) Quad9 (Anycast: worldwide)
+   5) Quad9 uncensored (Anycast: worldwide)
+   6) FDN (France)
+   7) DNS.WATCH (Germany)
+   8) OpenDNS (Anycast: worldwide)
+   9) Google (Anycast: worldwide)
+   10) Yandex Basic (Russia)
+   11) AdGuard DNS (Anycast: worldwide)
+   12) NextDNS (Anycast: worldwide)
+   13) Custom
+DNS [1-12]: 11
+
+Do you want to use compression? It is not recommended since the VORACLE attack make use of it.
+Enable compression? [y/n]: n
+
+Do you want to customize encryption settings?
+Unless you know what you're doing, you should stick with the default parameters provided by the script.
+Note that whatever you choose, all the choices presented in the script are safe. (Unlike OpenVPN's defaults)
+See https://github.com/angristan/openvpn-install#security-and-encryption to learn more.
+
+Customize encryption settings? [y/n]: n
+
+Okay, that was all I needed. We are ready to setup your OpenVPN server now.
+You will be able to generate a client at the end of the installation.
+Press any key to continue...
+
+Tell me a name for the client.
+The name must consist of alphanumeric character. It may also include an underscore or a dash.
+Client name: test_house
+
+Do you want to protect the configuration file with a password?
+(e.g. encrypt the private key with a password)
+   1) Add a passwordless client
+   2) Use a password for the client
+Select an option [1-2]: 1
+
+Note: using Easy-RSA configuration from: /etc/openvpn/easy-rsa/vars
+Using SSL: openssl OpenSSL 1.1.1f  31 Mar 2020
+Generating an EC private key
+writing new private key to '/etc/openvpn/easy-rsa/pki/easy-rsa-19644.0Ez0TD/tmp.cULilA'
+-----
+Using configuration from /etc/openvpn/easy-rsa/pki/easy-rsa-19644.0Ez0TD/tmp.CvMsyQ
+Check that the request matches the signature
+Signature ok
+The Subject's Distinguished Name is as follows
+commonName            :ASN.1 12:'test_house'
+Certificate is to be certified until May 29 23:26:03 2023 GMT (825 days)
+
+Write out database with 1 new entries
+Data Base Updated
+
+Client test_house added.
+
+The configuration file has been written to /home/ubuntu/test_house.ovpn.
+Download the .ovpn file and import it in your OpenVPN client.
+#==============================================================================#
+#==============================================================================#
+
+
