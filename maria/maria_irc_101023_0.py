@@ -655,7 +655,9 @@ str_alt = '''
 lines = str_alt.split('\n')
 #filtered_lines = [line +'\n' for line in lines if 'mariarahel' in line]
 #filtered_lines = [line +'\n' for line in lines if 'maria' in line]
-filtered_lines = [line +'\n' for line in lines if '] mariarahel:' in line or '] iTz_Black007:' in line]
+filtered_lines = [line for line in lines if '] mariarahel:' in line or '] iTz_Black007:' in line]
+#filtered_lines = [line +'\n' for line in lines if '] mariarahel:' in line or '] iTz_Black007:' in line or '] midnightmadwalk:' in line]
+
 for l in filtered_lines:
     print(l)
 

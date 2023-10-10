@@ -52,7 +52,7 @@ def track_msgs(server, port, nick='guest50040', channel='#test', pw=''):
 
         # check for ping
         if data.split()[0] == "PING":
-            print('['+get_time_now()+'] '+data+' ... PONG')
+            print('['+get_time_now()+'] '+data.rstrip()+' ... PONG')
             irc.send(bytes(f"PONG {data.split()[1]}\r\n", "UTF-8"))
         else:
             # Print formatted msg to the console
