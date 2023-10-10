@@ -10,7 +10,7 @@ print(f'GO {__filename} -> starting IMPORTs and globals decleration')
 import sys, os, time
 from datetime import datetime
 import requests, json
-import socket
+import socket, threading
 #from web3 import Web3
 #import inspect # this_funcname = inspect.stack()[0].function
 #parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,24 +23,20 @@ import socket
 #------------------------------------------------------------#
 #   FUNCTION SUPPORT                                         #
 #------------------------------------------------------------#
-def run_tracker():
-    # IRC server and channel information
-    ch_pulsechain = "#pulsechain"
-#    ch_atropa = "#atropa"
-    ch_test = "#test"
-    channel = ch_test
-    sec_timeout = None
-    
-    server = "irc.debian.org"
-    port = 6667
+# Function to send PING commands every 400 seconds
+#def send_ping_commands():
+#    while True:
+#        ping = '... keep-alive PING'
+#        print('['+get_time_now()+'] '+ping)
+#        irc.send(bytes("PING :keep-alive\r\n", "UTF-8"))
+#        #time.sleep(400)
+#        wait_sleep(1, b_print=True) # sleep 'wait_sec'
 
-    # Nickname and channel password (if required)
-    nick = "hlog"
-    pw = ""
-
+# Function to listen for incoming messages
+#def listen_for_messages():
+def track_msgs(server, port, nick='guest50040', channel='#test', pw=''):
     # Create a socket connection to the IRC server
     irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    irc.settimeout(sec_timeout) # Set a timeout seconds
     irc.connect((server, port))
 
     # Send the IRC handshake and join the channel
@@ -51,36 +47,16 @@ def run_tracker():
     while True:
         # data = ":r_!~r@ec2-18-188-176-66.us-east-2.compute.amazonaws.com PRIVMSG #test :te"
         data = irc.recv(2048).decode("UTF-8")
-        
         if not data:
             break
-        
-        # format user msg
-        str_result = 'nil_result'
-        #str_msg_start = '!-'+nick+'@'
-        
-        # check for users joing / leaving channel
-        if 'join' in data.lower() or 'part' in data.lower():
-            str_result = '['+get_time_now()+'] '+data
-        
-        # check for msg format
-        #elif (data[0] == ':' and data.find(str_msg_start) > -1):
-        #    usr = data[1:data.index(str_msg_start):1]
-        elif 'privmsg' in data.lower() or (data[0] == ':' and data.find('@') > -1):
-            # ex: data = ":r_!~r@ec2-18-188-176-66.us-east-2.compute.amazonaws.com PRIVMSG #test :t_msg"
-            usr = data[1:data.index('@'):1]
-            msg = data[data.rfind(':')+1:-1:1]
-            str_print = channel+'  <'+usr+'>    '+msg
-            str_time = get_time_now()
-            str_result = '['+str_time+'] '+str_print
-            # ex: str_result = "[10/09/23 23:07:35.42] #test  <r_!~r>    test"
-            
-        # handle default
-        else:
-            str_result = '['+get_time_now()+'] '+data
 
-        # Print formatted msg to the console
-        print(str_result)
+        # check for ping
+        if data.split()[0] == "PING":
+            print('['+get_time_now()+'] '+data+' ... PONG')
+            irc.send(bytes(f"PONG {data.split()[1]}\r\n", "UTF-8"))
+        else:
+            # Print formatted msg to the console
+            print(parse_msg_string(data, channel))
         
         # TODO: ... design / integrate DB
         #send_to_db(str_time, str_print, channel, usr, msg, data)
@@ -88,6 +64,33 @@ def run_tracker():
     # Close the IRC connection when done
     irc.close()
 
+def parse_msg_string(data, channel):
+    # format user msg
+    str_result = 'nil_result'
+    #str_msg_start = '!-'+nick+'@'
+    
+    # check for users joing / leaving channel
+    if 'join' in data.lower() or 'part' in data.lower():
+        str_result = '['+get_time_now()+'] '+data
+    
+    # check for msg format
+    #elif (data[0] == ':' and data.find(str_msg_start) > -1):
+    #    usr = data[1:data.index(str_msg_start):1]
+    elif 'privmsg' in data.lower() or (data[0] == ':' and data.find('@') > -1):
+        # ex: data = ":r_!~r@ec2-18-188-176-66.us-east-2.compute.amazonaws.com PRIVMSG #test :t_msg"
+        usr = data[1:data.index('@'):1]
+        msg = data[data.rfind(':')+1:-1:1]
+        str_print = channel+'  <'+usr+'>    '+msg
+        str_time = get_time_now()
+        str_result = '['+str_time+'] '+str_print
+        # ex: str_result = "[10/09/23 23:07:35.42] #test  <r_!~r>    test"
+        
+    # handle default
+    else:
+        str_result = '['+get_time_now()+'] '+data
+
+    return str_result
+    
 #------------------------------------------------------------#
 #   DEFAULT SUPPORT                                          #
 #------------------------------------------------------------#
@@ -122,7 +125,15 @@ def read_cli_args():
 
 def go_main():
     try:
-        run_tracker()
+        # run tracker
+        ch_lst = ["#test", "#pulsechain", "#atropa"]
+        track_msgs("irc.debian.org", 6667, 'hlog', ch_lst[2]) # IRC server, port, nick, channel & channel pw (if required)
+    
+        # Create and start two threads
+        #ping_thread = threading.Thread(target=send_ping_commands)
+        #message_thread = threading.Thread(target=listen_for_messages)
+        #ping_thread.start()
+        #message_thread.start()
     except Exception as e:
         print(f'Error: {e}')
         
