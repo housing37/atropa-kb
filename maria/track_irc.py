@@ -133,7 +133,7 @@ def go_main():
     try:
         # run tracker
         ch_lst = ["#test", "#pulsechain", "#atropa"]
-        track_msgs("irc.debian.org", 6667, 'hlog', ch_lst[2]) # IRC server, port, nick, channel & channel pw (if required)
+        track_msgs("irc.debian.org", 6667, 'hlog', ch_lst[0]) # IRC server, port, nick, channel & channel pw (if required)
     
         # Create and start two threads
         #ping_thread = threading.Thread(target=send_ping_commands)
