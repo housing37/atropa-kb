@@ -72,8 +72,8 @@ def track_msgs(server, port, nick='guest50040', channel='#test', pw=''):
 
 def parse_msg_string(data, channel):
     # format user msg
-    str_result = 'nil_result'
     #str_msg_start = '!-'+nick+'@'
+    str_result = str_time = usr = msg = 'nil_parse'
     
     # check for users joing / leaving channel
     if 'join' in data.lower() or 'part' in data.lower():
