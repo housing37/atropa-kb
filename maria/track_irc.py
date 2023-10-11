@@ -47,19 +47,25 @@ def track_msgs(server, port, nick='guest50040', channel='#test', pw=''):
     while True:
         # data = ":r_!~r@ec2-18-188-176-66.us-east-2.compute.amazonaws.com PRIVMSG #test :te"
         data = irc.recv(2048).decode("UTF-8")
+        str_print = str_time = usr = msg = 'nil_str'
         if not data:
             break
 
         # check for ping
         if data.split()[0] == "PING":
-            print('['+get_time_now()+'] '+data.rstrip()+' ... PONG')
+            str_print = '['+get_time_now()+'] '+data.rstrip()+' ... PONG'
+            print(str_print)
             irc.send(bytes(f"PONG {data.split()[1]}\r\n", "UTF-8"))
         else:
             # Print formatted msg to the console
-            print(parse_msg_string(data, channel))
+            str_print, str_time, usr, msg = parse_msg_string(data, channel)
+            print(str_print)
         
+        if 'mariarahel' in usr:
+            pass # TODO: notify admin
+            
         # TODO: ... design / integrate DB
-        #send_to_db(str_time, str_print, channel, usr, msg, data)
+        #send_to_db(data, str_print, str_time, usr, msg, server, port, nick, channel)
         
     # Close the IRC connection when done
     irc.close()
@@ -89,7 +95,7 @@ def parse_msg_string(data, channel):
     else:
         str_result = '['+get_time_now()+'] '+data
 
-    return str_result
+    return str_result, str_time, usr, msg
     
 #------------------------------------------------------------#
 #   DEFAULT SUPPORT                                          #
