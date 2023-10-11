@@ -301,12 +301,12 @@ Oct 09 20:31:29 *	thecyclewatcher (~oftc-webi@2600:8802:1805:900:b8d9:262:6904:1
 Oct 09 20:31:49 *	hextrack has quit ()
 Oct 09 20:32:20 *	Tbill (~igloo@184-088-037-224.res.spectrum.com) has joined
 Oct 09 20:32:35 <moose_>	@mariarahel what do you mean when you say there are certain price floors that ATROPA can't go under. Does that remain true if PLS goes down past a certain level?
+'''
 
-    '''
-
-lines = str_alt.split('\n')
-#filtered_lines = [line +'\n' for line in lines if 'mariarahel' in line]
-filtered_lines = [line +'\n' for line in lines if 'maria' in line]
-for l in filtered_lines:
-    print(l)
+if __name__ == "__main__":
+    lines = str_alt.split('\n')
+    #filtered_lines = [line +'\n' for line in lines if 'mariarahel' in line]
+    filtered_lines = [line +'\n' for line in lines if 'maria' in line]
+    for l in filtered_lines:
+        print(l)
 
